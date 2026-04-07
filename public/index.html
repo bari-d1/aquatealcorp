@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Construction Contract Administration Bootcamp | Aqua Teal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- NAVBAR -->
+  <header style="background-color:#150200;" class="text-white px-8 py-4 flex justify-between items-center sticky top-0 z-50 shadow">
+    <div class="flex items-center gap-3">
+      <img src="/images/aquateal-logo.png" alt="Aqua Teal" class="h-10 w-auto" />
+      <span class="text-xl font-bold tracking-wide">Aqua Teal</span>
+    </div>
+    <nav class="hidden md:flex items-center gap-8 text-sm">
+      <a href="#about" class="hover:opacity-75 transition">About</a>
+      <a href="#instructor" class="hover:opacity-75 transition">Instructor</a>
+      <a href="#pricing" class="hover:opacity-75 transition">Pricing</a>
+      <a href="#faq" class="hover:opacity-75 transition">FAQ</a>
+    </nav>
+    <a href="#register" style="background-color:#EF943C;" class="text-white font-semibold px-5 py-2 rounded-full text-sm transition hover:opacity-90">Register Now</a>
+  </header>
+
+  <!-- HERO — headline left, form right -->
+  <section style="background-color:#2355C5;" class="text-white px-6 md:px-16 py-20">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-start">
+
+      <!-- Left: headline + meta + instructor card -->
+      <div class="flex-1 flex flex-col justify-between min-h-full">
+        <div>
+          <p class="uppercase tracking-widest text-blue-200 text-xs mb-4">Professional Training Program</p>
+          <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">
+            Construction Contract Administration Bootcamp
+          </h1>
+          <p class="text-xl text-blue-100 mb-8">
+            Learn the practical skills employers expect from Contract Administrators in Canada.
+          </p>
+          <div class="space-y-2 text-sm text-blue-100 mb-12">
+            <p>&#128197; &nbsp;Start Date: <strong class="text-white">[Insert Date]</strong></p>
+            <p>&#9200; &nbsp;Duration: <strong class="text-white">6 Weeks - 24 Hours Total</strong></p>
+            <p>&#128205; &nbsp;Format: <strong class="text-white">Online (Live) / Calgary</strong></p>
+          </div>
+        </div>
+
+        <!-- Instructor preview card (like the Dribbble design) -->
+        <div class="flex items-center gap-4 bg-white bg-opacity-10 rounded-2xl px-5 py-4 max-w-xs border border-white border-opacity-20">
+          <img src="/images/yemi3.jpeg" alt="Olayemi Kupoluyi" class="w-14 h-14 rounded-full object-cover flex-shrink-0" />
+          <div>
+            <p class="text-xs text-blue-200 uppercase tracking-widest mb-1">Featuring</p>
+            <p class="font-bold text-white text-sm">Olayemi Kupoluyi</p>
+            <p class="text-blue-200 text-xs">Construction Professional</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: floating registration form -->
+      <div id="register" class="w-full md:w-96 bg-white text-gray-800 rounded-2xl shadow-2xl p-8 flex-shrink-0">
+        <h3 class="text-xl font-bold mb-1" style="color:#2355C5;">Reserve Your Spot</h3>
+        <p class="text-gray-500 text-sm mb-6">Seats are limited - enroll before they fill up.</p>
+        <form id="enrollForm" class="space-y-4">
+          <input type="text" id="firstName" placeholder="First Name" required class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+          <input type="text" id="lastName" placeholder="Last Name" required class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+          <input type="email" id="email" placeholder="Email Address" required class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+          <input type="tel" id="phone" placeholder="Phone Number" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+          <button type="submit" id="submitBtn" class="w-full text-white font-bold py-3 rounded-full transition hover:opacity-90 text-sm" style="background-color:#EF943C;">
+            Save My Spot
+          </button>
+          <p id="formMsg" class="text-xs text-center hidden"></p>
+        </form>
+        <p class="text-xs text-gray-400 mt-4 text-center">By registering, you agree to receive course updates from Aqua Teal. You may unsubscribe at any time.</p>
+        <script>
+          document.getElementById('enrollForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('formMsg');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            try {
+              const res = await fetch('/enroll', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  firstName: document.getElementById('firstName').value,
+                  lastName: document.getElementById('lastName').value,
+                  email: document.getElementById('email').value,
+                  phone: document.getElementById('phone').value,
+                })
+              });
+              if (res.ok) {
+                msg.textContent = 'You are registered! Check your email for confirmation.';
+                msg.className = 'text-xs text-center text-green-600';
+                e.target.reset();
+                btn.textContent = 'Spot Saved!';
+              } else {
+                throw new Error();
+              }
+            } catch {
+              msg.textContent = 'Something went wrong. Please try again.';
+              msg.className = 'text-xs text-center text-red-500';
+              btn.disabled = false;
+              btn.textContent = 'Save My Spot';
+            }
+          });
+        </script>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRUST STATEMENT -->
+  <div class="py-4 px-8 text-center text-sm border-b border-gray-100" style="background-color:#f0f4ff; color:#2355C5;">
+    <strong>Designed using principles aligned with industry standards</strong> such as those from Construction Specifications Canada.
+  </div>
+
+  <!-- WHAT THIS BOOTCAMP IS ABOUT — image left, content right -->
+  <section id="about" class="py-20 px-6 md:px-16 max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row gap-12 items-center">
+
+      <!-- Left: image placeholder -->
+      <div class="w-full md:w-5/12 flex-shrink-0">
+        <div class="rounded-2xl overflow-hidden h-80 md:h-96">
+          <img src="/images/yemi1.jpeg" alt="Course" class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <!-- Right: text -->
+      <div class="flex-1">
+        <p class="text-sm uppercase tracking-widest mb-2" style="color:#EF943C;">The Program</p>
+        <h2 class="text-3xl font-bold mb-4" style="color:#2355C5;">
+          What This <span style="color:#EF943C;">Bootcamp</span> Is About
+        </h2>
+        <p class="text-gray-600 mb-4 leading-relaxed">
+          Most training programs teach theory. This bootcamp focuses on real-world, practical skills used on actual Canadian construction projects.
+        </p>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          You will work on real scenarios, use industry templates, and practice reviewing RFIs and change orders - exactly the way it's done on the job.
+        </p>
+        <p class="font-semibold text-gray-800 mb-4">Key Topics Covered</p>
+        <div class="space-y-2 mb-8">
+          <div class="flex items-start gap-2 text-sm text-gray-700"><span style="color:#EF943C;">&#10004;</span> Construction contracts and risk allocation</div>
+          <div class="flex items-start gap-2 text-sm text-gray-700"><span style="color:#EF943C;">&#10004;</span> RFI management and submittal tracking</div>
+          <div class="flex items-start gap-2 text-sm text-gray-700"><span style="color:#EF943C;">&#10004;</span> Change orders, payment certification, and holdbacks</div>
+          <div class="flex items-start gap-2 text-sm text-gray-700"><span style="color:#EF943C;">&#10004;</span> Claims, disputes, and project closeout</div>
+        </div>
+        <a href="#register" class="inline-block text-white font-bold px-7 py-3 rounded-full transition hover:opacity-90 text-sm" style="background-color:#EF943C;">
+          Reserve My Spot
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WHAT YOU WILL LEARN — full grid -->
+  <section class="py-20 px-6 md:px-16" style="background-color:#f7f7f7;">
+    <div class="max-w-6xl mx-auto">
+      <p class="text-sm uppercase tracking-widest text-center mb-2" style="color:#EF943C;">Curriculum</p>
+      <h2 class="text-3xl font-bold text-center mb-12" style="color:#2355C5;">What You Will Learn</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #4490DF;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Contracts &amp; Risk</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Understand construction contracts and how risk is allocated between parties.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #4490DF;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Drawings &amp; Specs</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Interpret drawings and specifications used on Canadian projects.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #4490DF;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">RFIs &amp; Submittals</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Manage RFIs and track submittals and shop drawings effectively.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #4490DF;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Change Orders</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Evaluate change orders, variations, and their cost implications.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #EF943C;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Payment Certification</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Understand payment certification processes and statutory holdbacks.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #EF943C;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Claims &amp; Disputes</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Identify, manage, and document claims and construction disputes.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #EF943C;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Project Closeout</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Handle all closeout documentation correctly and efficiently.</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm" style="border-top: 3px solid #EF943C;">
+          <p class="font-bold text-gray-800 mb-2 text-sm">Industry Templates</p>
+          <p class="text-gray-500 text-xs leading-relaxed">Use actual templates from the field, not just theory from a textbook.</p>
+        </div>
+      </div>
+    </div>
+  </section>r
+
+  <!-- MEET THE INSTRUCTOR — photo left, bio right -->
+  <section id="instructor" class="py-20 px-6 md:px-16">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-center">
+
+      <!-- Left: photo -->
+      <div class="w-full md:w-5/12 flex-shrink-0">
+        <div class="rounded-2xl overflow-hidden h-80 md:h-96">
+          <img src="/images/yemi3.jpeg" alt="Olayemi Kupoluyi" class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <!-- Right: bio -->
+      <div class="flex-1">
+        <p class="text-sm uppercase tracking-widest mb-2" style="color:#EF943C;">Your Instructor</p>
+        <h2 class="text-3xl font-bold mb-1" style="color:#2355C5;">
+          Meet <span style="color:#EF943C;">Olayemi Kupoluyi</span>, Construction Professional
+        </h2>
+        <p class="text-sm mb-5" style="color:#4490DF;">Contract Administrator &amp; Project Coordinator</p>
+        <p class="text-gray-600 mb-4 leading-relaxed">
+          An experienced construction professional with hands-on background in contract administration, project coordination, and construction documentation on real Canadian projects.
+        </p>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Passionate about helping engineers, architects, and new professionals break into the construction industry with the practical skills employers actually expect.
+        </p>
+        <ul class="space-y-2 text-sm text-gray-700 mb-8">
+          <li class="flex items-center gap-2"><span style="color:#EF943C;">&#10004;</span> Construction documentation</li>
+          <li class="flex items-center gap-2"><span style="color:#EF943C;">&#10004;</span> Contract administration</li>
+          <li class="flex items-center gap-2"><span style="color:#EF943C;">&#10004;</span> Project coordination</li>
+          <li class="flex items-center gap-2"><span style="color:#EF943C;">&#10004;</span> Real-world Canadian construction projects</li>
+        </ul>
+        <a href="#register" class="inline-block text-white font-bold px-7 py-3 rounded-full transition hover:opacity-90 text-sm" style="background-color:#EF943C;">
+          Register Now
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WHAT YOU GET — dark section -->
+  <section class="py-20 px-6 md:px-16 text-white" style="background-color:#150200;">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-widest mb-2" style="color:#EF943C;">Included</p>
+          <h2 class="text-3xl font-bold">What You Get When You Enroll</h2>
+        </div>
+        <a href="#register" class="inline-block text-white font-bold px-7 py-3 rounded-full transition hover:opacity-90 text-sm self-start md:self-auto" style="background-color:#EF943C;">
+          Enroll Now
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div class="rounded-xl p-5 flex items-center gap-3" style="background-color:#2a0400;">
+          <i class="fa-regular fa-file-lines text-lg" style="color:#EF943C;"></i>
+          <span class="text-sm">RFI Template</span>
+        </div>
+        <div class="rounded-xl p-5 flex items-center gap-3" style="background-color:#2a0400;">
+          <i class="fa-regular fa-file-lines text-lg" style="color:#EF943C;"></i>
+          <span class="text-sm">Change Order Template</span>
+        </div>
+        <div class="rounded-xl p-5 flex items-center gap-3" style="background-color:#2a0400;">
+          <i class="fa-regular fa-rectangle-list text-lg" style="color:#EF943C;"></i>
+          <span class="text-sm">Submittal Log</span>
+        </div>
+        <div class="rounded-xl p-5 flex items-center gap-3" style="background-color:#2a0400;">
+          <i class="fa-regular fa-file-lines text-lg" style="color:#EF943C;"></i>
+          <span class="text-sm">Payment Certificate Template</span>
+        </div>
+        <div class="rounded-xl p-5 flex items-center gap-3" style="background-color:#2a0400;">
+          <i class="fa-regular fa-clock text-lg" style="color:#EF943C;"></i>
+          <span class="text-sm">Site Meeting Minutes Template</span>
+        </div>
+        <div class="rounded-xl p-5 flex items-center gap-3" style="background-color:#2a0400;">
+          <i class="fa-solid fa-list-check text-lg" style="color:#EF943C;"></i>
+          <span class="text-sm">Construction Documentation Checklist</span>
+        </div>
+      </div>
+      <div class="rounded-xl p-5 flex items-center gap-3 max-w-xs" style="background-color:#EF943C;">
+        <i class="fa-solid fa-graduation-cap text-lg text-white"></i>
+        <span class="text-sm font-bold">Certificate of Completion</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BONUS -->
+  <section class="py-16 px-6 md:px-16" style="background-color:#fff8f0;">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
+      <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-2xl" style="background-color:#EF943C; color:white;">&#127873;</div>
+      <div>
+        <p class="text-xs uppercase tracking-widest mb-1" style="color:#EF943C;">Free Bonus</p>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">"How to Get a Contract Administrator Job in Canada"</h3>
+        <p class="text-gray-500 text-sm">Includes: resume strategy &bull; interview preparation &bull; job search tips &bull; industry insights</p>
+      </div>
+      <a href="#register" class="flex-shrink-0 inline-block text-white font-bold px-7 py-3 rounded-full transition hover:opacity-90 text-sm" style="background-color:#EF943C;">
+        Get the Bonus
+      </a>
+    </div>
+  </section>
+
+  <!-- COURSE FORMAT + WHY NOW — two col -->
+  <section class="py-20 px-6 md:px-16">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-12">
+
+      <!-- Format -->
+      <div class="flex-1">
+        <p class="text-sm uppercase tracking-widest mb-2" style="color:#EF943C;">Schedule</p>
+        <h2 class="text-3xl font-bold mb-6" style="color:#2355C5;">Course Format</h2>
+        <div class="space-y-5">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background-color:#f0f4ff; color:#2355C5; font-size:1.2rem;">&#128197;</div>
+            <div>
+              <p class="font-bold text-gray-800">6 Weeks</p>
+              <p class="text-gray-500 text-sm">24 hours of total instruction</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background-color:#f0f4ff; color:#2355C5; font-size:1.2rem;">&#128336;</div>
+            <div>
+              <p class="font-bold text-gray-800">2 Sessions Per Week</p>
+              <p class="text-gray-500 text-sm">2 hours per session</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background-color:#f0f4ff; color:#2355C5; font-size:1.2rem;">&#128205;</div>
+            <div>
+              <p class="font-bold text-gray-800">Online &amp; Calgary</p>
+              <p class="text-gray-500 text-sm">Live instructor-led sessions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why Now -->
+      <div class="flex-1">
+        <p class="text-sm uppercase tracking-widest mb-2" style="color:#EF943C;">Why Act Now</p>
+        <h2 class="text-3xl font-bold mb-6" style="color:#2355C5;">Why Now?</h2>
+        <p class="text-gray-600 mb-4 leading-relaxed">
+          The demand for skilled Contract Administrators in Canada is growing. Employers are hiring professionals who understand the full lifecycle of construction documentation - not just the basics.
+        </p>
+        <p class="text-gray-600 mb-4 leading-relaxed">
+          This bootcamp gives you that edge. Practical, focused, and built around what's actually used in the field.
+        </p>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Don't wait for the next intake - cohorts are capped at 10&ndash;20 seats to keep the learning hands-on.
+        </p>
+        <a href="#register" class="inline-block text-white font-bold px-7 py-3 rounded-full transition hover:opacity-90 text-sm" style="background-color:#EF943C;">
+          Save My Spot
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="py-20 px-6 md:px-16" style="background-color:#f7f7f7;">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-sm uppercase tracking-widest mb-2" style="color:#EF943C;">Investment</p>
+      <h2 class="text-3xl font-bold mb-3" style="color:#2355C5;">Pricing</h2>
+      <p class="font-semibold mb-10 text-sm" style="color:#E8294A;">Limited seats available - 10 to 20 per cohort</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="rounded-2xl p-8 relative bg-white shadow" style="border: 2px solid #EF943C;">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-white text-xs font-bold px-3 py-1 rounded-full" style="background-color:#EF943C;">EARLY BIRD</span>
+          <p class="text-5xl font-extrabold mt-2" style="color:#2355C5;">$499</p>
+          <p class="text-gray-500 text-sm mt-2">Limited time offer</p>
+          <a href="#register" class="mt-6 block text-white font-bold py-3 rounded-full transition hover:opacity-90" style="background-color:#EF943C;">
+            Secure Your Spot
+          </a>
+        </div>
+        <div class="border border-gray-200 rounded-2xl p-8 bg-white">
+          <p class="text-gray-400 text-sm font-semibold uppercase tracking-wide mt-2">Regular Price</p>
+          <p class="text-5xl font-extrabold text-gray-300 mt-2 line-through">$699</p>
+          <p class="text-gray-400 text-sm mt-2">After early bird ends</p>
+          <div class="mt-6 bg-gray-200 text-gray-400 font-bold py-3 rounded-full">Register Now</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="py-20 px-6 md:px-16">
+    <div class="max-w-6xl mx-auto">
+      <p class="text-sm uppercase tracking-widest text-center mb-2" style="color:#EF943C;">Student Feedback</p>
+      <h2 class="text-3xl font-bold text-center mb-10" style="color:#2355C5;">What Students Say</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="rounded-xl p-7 shadow-sm border border-gray-100">
+          <div class="flex gap-1 mb-4" style="color:#EF943C;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="text-gray-600 italic mb-5 leading-relaxed">"This course helped me understand RFIs and construction documentation used in Canada."</p>
+          <p class="font-semibold text-sm" style="color:#4490DF;">- Course Graduate</p>
+        </div>
+        <div class="rounded-xl p-7 shadow-sm border border-gray-100">
+          <div class="flex gap-1 mb-4" style="color:#EF943C;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="text-gray-600 italic mb-5 leading-relaxed">"Very practical and easy to follow. Highly recommend for anyone entering the industry."</p>
+          <p class="font-semibold text-sm" style="color:#4490DF;">- Course Graduate</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 px-6 md:px-16" style="background-color:#f7f7f7;">
+    <div class="max-w-3xl mx-auto">
+      <p class="text-sm uppercase tracking-widest text-center mb-2" style="color:#EF943C;">Questions</p>
+      <h2 class="text-3xl font-bold text-center mb-10" style="color:#2355C5;">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        <details class="bg-white rounded-xl p-5 cursor-pointer shadow-sm">
+          <summary class="font-semibold text-gray-800 list-none flex justify-between items-center">
+            Do I need construction experience?
+            <span style="color:#4490DF;">&#9660;</span>
+          </summary>
+          <p class="text-gray-600 mt-3 text-sm">No. Beginners are welcome, but some background is helpful.</p>
+        </details>
+        <details class="bg-white rounded-xl p-5 cursor-pointer shadow-sm">
+          <summary class="font-semibold text-gray-800 list-none flex justify-between items-center">
+            Will I get a job after this course?
+            <span style="color:#4490DF;">&#9660;</span>
+          </summary>
+          <p class="text-gray-600 mt-3 text-sm">This course provides practical skills, but job placement is not guaranteed.</p>
+        </details>
+        <details class="bg-white rounded-xl p-5 cursor-pointer shadow-sm">
+          <summary class="font-semibold text-gray-800 list-none flex justify-between items-center">
+            Is this course certified?
+            <span style="color:#4490DF;">&#9660;</span>
+          </summary>
+          <p class="text-gray-600 mt-3 text-sm">You will receive a Certificate of Completion.</p>
+        </details>
+        <details class="bg-white rounded-xl p-5 cursor-pointer shadow-sm">
+          <summary class="font-semibold text-gray-800 list-none flex justify-between items-center">
+            Is this course affiliated with any organization?
+            <span style="color:#4490DF;">&#9660;</span>
+          </summary>
+          <p class="text-gray-600 mt-3 text-sm">No. This is an independent training program.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA BANNER — headline left, button right (like Dribbble) -->
+  <section class="py-16 px-6 md:px-16 text-white" style="background-color:#150200;">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold mb-2">Don't Leave Your Career to Chance</h2>
+        <p class="text-gray-400">Register now and take the first step toward a career in Construction Contract Administration.</p>
+      </div>
+      <a href="#register" class="flex-shrink-0 text-white font-bold px-10 py-4 rounded-full transition hover:opacity-90 text-base" style="background-color:#EF943C;">
+        Sign Up Now
+      </a>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <div class="px-6 py-4 text-center text-xs text-gray-400 max-w-4xl mx-auto my-4">
+    This program is an independent professional training course and is not affiliated with or accredited by Construction Specifications Canada or any regulatory body.
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="background-color:#150200;" class="text-gray-400 px-8 py-8">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <img src="/images/aquateal-logo.png" alt="Aqua Teal" class="h-8 w-auto opacity-80" />
+        <span class="text-sm font-bold" style="color:#EF943C;">Aqua Teal</span>
+      </div>
+      <p class="text-xs text-center">&copy; 2026 Aqua Teal. All rights reserved.</p>
+      <div class="flex gap-6 text-xs">
+        <a href="#about" class="hover:text-white transition">About</a>
+        <a href="#pricing" class="hover:text-white transition">Pricing</a>
+        <a href="#faq" class="hover:text-white transition">FAQ</a>
+        <a href="#contact" class="hover:text-white transition">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
