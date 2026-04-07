@@ -3,14 +3,24 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Enrollment {
   id        Int      @id @default(autoincrement())
   firstName String
   lastName  String
-  email     String
+  email     String   @unique
   phone     String?
+  role      String?
+  cohort    String?
+  province  String?
+  referral  String?
   createdAt DateTime @default(now())
+}
+
+model CohortOption {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+  price String
 }

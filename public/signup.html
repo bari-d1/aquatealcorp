@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Construction Contract Administration Bootcamp | Aqua Teal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #1a3a6b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .hero-text {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 32px;
+      max-width: 560px;
+    }
+
+    .hero-text .label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #f5a623;
+      margin-bottom: 10px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-text p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a3a6b;
+      margin-bottom: 4px;
+    }
+
+    .card .subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 28px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 14px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 5px;
+      letter-spacing: 0.02em;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 9px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #111827;
+      background: #fff;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1a3a6b;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: '▾';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      pointer-events: none;
+      font-size: 13px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .radio-option {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 9px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .radio-option input[type="radio"] {
+      width: auto;
+      accent-color: #f5a623;
+    }
+
+    .radio-option:has(input:checked) {
+      border-color: #f5a623;
+      background: #fff8ee;
+      color: #1a3a6b;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      background: #f5a623;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    .btn:hover { background: #e09515; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .fine-print {
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .message {
+      display: none;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .message.success {
+      display: block;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    @media (max-width: 500px) {
+      .card { padding: 28px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div style="margin-bottom: 24px;">
+    <img src="/images/aquateal-logo.png" alt="Aqua Teal" style="height: 56px; width: auto;" />
+  </div>
+
+  <div class="hero-text">
+    <!-- <p class="label">Professional Training Program</p> -->
+    <h1>Construction Contract Administration Bootcamp</h1>
+    <p>Learn the practical skills employers expect from Contract Administrators in Canada.</p>
+  </div>
+
+  <div class="card">
+    <h2>Reserve Your Spot</h2>
+    <p class="subtitle">Seats are limited — enroll before they fill up.</p>
+
+    <form id="signupForm" novalidate>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="Jane" required />
+        </div>
+        <div class="form-group">
+          <label for="last_name">Last Name</label>
+          <input type="text" id="last_name" name="last_name" placeholder="Smith" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+1 (403) 000-0000" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role / Profession</label>
+        <div class="select-wrapper">
+          <select id="role" name="role" required>
+            <option value="" disabled selected>Select your role</option>
+            <option>Architect</option>
+            <option>Civil Engineer</option>
+            <option>Project Manager</option>
+            <option>Project Coordinator</option>
+            <option>Estimator</option>
+            <option>Technologist</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="province">Province</label>
+        <div class="select-wrapper">
+          <select id="province" name="province" required>
+            <option value="" disabled selected>Select your province</option>
+            <option>Alberta</option>
+            <option>British Columbia</option>
+            <option>Manitoba</option>
+            <option>New Brunswick</option>
+            <option>Newfoundland and Labrador</option>
+            <option>Northwest Territories</option>
+            <option>Nova Scotia</option>
+            <option>Nunavut</option>
+            <option>Ontario</option>
+            <option>Prince Edward Island</option>
+            <option>Quebec</option>
+            <option>Saskatchewan</option>
+            <option>Yukon</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Cohort Preference</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="cohort" value="Early Bird" required />
+            Early Bird — $499
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="cohort" value="Regular" />
+            Regular — $699
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="referral">How Did You Hear About Us?</label>
+        <div class="select-wrapper">
+          <select id="referral" name="referral">
+            <option value="" disabled selected>Select an option</option>
+            <option>Social Media</option>
+            <option>Word of Mouth</option>
+            <option>Referral</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Save My Spot</button>
+
+      <p class="fine-print">By registering, you agree to receive course updates from Aqua Teal. You may unsubscribe at any time.</p>
+
+      <div class="message" id="statusMessage"></div>
+
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('signupForm');
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('statusMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      msg.className = 'message';
+      msg.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const data = {
+        first_name: form.first_name.value.trim(),
+        last_name:  form.last_name.value.trim(),
+        email:      form.email.value.trim(),
+        phone:      form.phone.value.trim(),
+        role:       form.role.value,
+        cohort:     form.cohort.value,
+        province:   form.province.value,
+        referral:   form.referral.value,
+      };
+
+      try {
+        const res = await fetch('/bootcamp/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const json = await res.json();
+
+        if (res.ok) {
+          form.reset();
+          msg.className = 'message success';
+          msg.textContent = "You're registered! Check your inbox for a confirmation email.";
+        } else {
+          msg.className = 'message error';
+          msg.textContent = json.error || 'Something went wrong. Please try again.';
+        }
+      } catch {
+        msg.className = 'message error';
+        msg.textContent = 'Network error. Please check your connection and try again.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save My Spot';
+      }
+    });
+  </script>
+
+</body>
+</html>

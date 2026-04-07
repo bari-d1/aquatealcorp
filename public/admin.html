@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Aqua Teal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #111827; }
+
+    /* ── Login screen ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1a3a6b;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+
+    .login-card img { height: 48px; margin-bottom: 20px; }
+    .login-card h1 { font-size: 1.3rem; font-weight: 700; color: #1a3a6b; margin-bottom: 6px; }
+    .login-card p  { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+
+    .login-card input {
+      width: 100%;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .login-card input:focus { outline: none; border-color: #1a3a6b; }
+
+    .btn-primary {
+      width: 100%;
+      background: #f5a623;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: #e09515; }
+
+    .error-msg { color: #dc2626; font-size: 12px; margin-top: 10px; }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; }
+
+    .topbar {
+      background: #1a3a6b;
+      color: #fff;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-left img { height: 36px; }
+    .topbar-left span { font-weight: 700; font-size: 15px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 16px; font-size: 13px; }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.65);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .content { padding: 28px; max-width: 1200px; margin: 0 auto; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Stats row ── */
+    .stats { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      flex: 1;
+      min-width: 140px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .stat-card .num { font-size: 2rem; font-weight: 800; color: #1a3a6b; }
+    .stat-card .lbl { font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+    /* ── Table ── */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h2 { font-size: 15px; font-weight: 700; color: #1a3a6b; }
+
+    .search-input {
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      width: 220px;
+    }
+
+    .search-input:focus { outline: none; border-color: #1a3a6b; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+    th {
+      background: #f9fafb;
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f9fafb;
+      color: #374151;
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge.orange { background: #fff3cd; color: #92400e; }
+
+    .del-btn {
+      background: none;
+      border: 1px solid #fca5a5;
+      color: #dc2626;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .del-btn:hover { background: #fef2f2; }
+
+    /* ── Cohort options ── */
+    .cohort-list { padding: 20px 24px; }
+
+    .cohort-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
+
+    .cohort-item .cohort-info { display: flex; gap: 12px; align-items: center; }
+    .cohort-item .cohort-label { font-weight: 600; font-size: 14px; }
+    .cohort-item .cohort-price { font-size: 13px; color: #6b7280; }
+
+    .cohort-actions { display: flex; gap: 8px; }
+
+    .edit-btn {
+      background: none;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .edit-btn:hover { background: #f3f4f6; }
+
+    .add-cohort-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .add-cohort-form input {
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .add-cohort-form input:focus { outline: none; border-color: #1a3a6b; }
+
+    .btn-small {
+      background: #1a3a6b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-small:hover { background: #14305a; }
+
+    .empty-state { text-align: center; padding: 48px; color: #9ca3af; font-size: 14px; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal h3 { font-size: 15px; font-weight: 700; color: #1a3a6b; margin-bottom: 16px; }
+
+    .modal input {
+      width: 100%;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .modal input:focus { outline: none; border-color: #1a3a6b; }
+
+    .modal-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+    .btn-cancel {
+      flex: 1;
+      background: #f3f4f6;
+      color: #374151;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      flex: 1;
+      background: #f5a623;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+      .content { padding: 16px; }
+      .stats { flex-direction: column; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <img src="/images/aquateal-logo.png" alt="Aqua Teal" />
+      <h1>Admin Dashboard</h1>
+      <p>Enter your password to continue.</p>
+      <input type="password" id="passwordInput" placeholder="Password" />
+      <button class="btn-primary" onclick="login()">Sign In</button>
+      <p class="error-msg" id="loginError"></p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+
+    <div class="topbar">
+      <div class="topbar-left">
+        <img src="/images/aquateal-logo.png" alt="Aqua Teal" />
+        <span>Admin</span>
+      </div>
+      <div class="topbar-right">
+        <button class="tab-btn active" onclick="switchTab('enrollments', this)">Enrollments</button>
+        <button class="tab-btn" onclick="switchTab('cohorts', this)">Cohort Options</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ENROLLMENTS TAB -->
+      <div class="tab-panel active" id="tab-enrollments">
+        <div class="stats">
+          <div class="stat-card">
+            <div class="num" id="totalCount">-</div>
+            <div class="lbl">Total Enrollments</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="earlyBirdCount">-</div>
+            <div class="lbl">Early Bird</div>
+          </div>
+          <div class="stat-card">
+            <div class="num" id="regularCount">-</div>
+            <div class="lbl">Regular</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>All Signups</h2>
+            <input class="search-input" type="text" placeholder="Search name or email..." oninput="filterTable(this.value)" />
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Cohort</th>
+                <th>Province</th>
+                <th>Referral</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="enrollmentTable">
+              <tr><td colspan="9" class="empty-state">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- COHORTS TAB -->
+      <div class="tab-panel" id="tab-cohorts">
+        <div class="card">
+          <div class="card-header">
+            <h2>Cohort Preferences</h2>
+          </div>
+          <div class="cohort-list">
+            <div id="cohortList"></div>
+            <div class="add-cohort-form">
+              <input type="text" id="newLabel" placeholder="Label (e.g. Summer 2026)" />
+              <input type="text" id="newPrice" placeholder="Price (e.g. $499)" />
+              <button class="btn-small" onclick="addCohort()">+ Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h3>Edit Cohort Option</h3>
+      <input type="text" id="editLabel" placeholder="Label" />
+      <input type="text" id="editPrice" placeholder="Price" />
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" onclick="saveCohortEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allEnrollments = [];
+    let editingCohortId = null;
+
+    // ── Auth ──────────────────────────────────────────────────────────────────
+    async function checkAuth() {
+      const res = await fetch('/admin/me');
+      const data = await res.json();
+      if (data.authenticated) showDashboard();
+    }
+
+    async function login() {
+      const password = document.getElementById('passwordInput').value;
+      const res = await fetch('/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        showDashboard();
+      } else {
+        document.getElementById('loginError').textContent = 'Incorrect password.';
+      }
+    }
+
+    document.getElementById('passwordInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') login();
+    });
+
+    async function logout() {
+      await fetch('/admin/logout', { method: 'POST' });
+      location.reload();
+    }
+
+    function showDashboard() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadEnrollments();
+      loadCohorts();
+    }
+
+    // ── Tabs ──────────────────────────────────────────────────────────────────
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // ── Enrollments ───────────────────────────────────────────────────────────
+    async function loadEnrollments() {
+      const res = await fetch('/admin/enrollments');
+      allEnrollments = await res.json();
+      renderTable(allEnrollments);
+      document.getElementById('totalCount').textContent = allEnrollments.length;
+      document.getElementById('earlyBirdCount').textContent = allEnrollments.filter(e => e.cohort === 'Early Bird').length;
+      document.getElementById('regularCount').textContent = allEnrollments.filter(e => e.cohort === 'Regular').length;
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('enrollmentTable');
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No enrollments yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(e => `
+        <tr>
+          <td><strong>${e.firstName} ${e.lastName}</strong></td>
+          <td>${e.email}</td>
+          <td>${e.phone || '-'}</td>
+          <td>${e.role || '-'}</td>
+          <td>${e.cohort ? `<span class="badge ${e.cohort === 'Early Bird' ? 'orange' : ''}">${e.cohort}</span>` : '-'}</td>
+          <td>${e.province || '-'}</td>
+          <td>${e.referral || '-'}</td>
+          <td>${new Date(e.createdAt).toLocaleDateString('en-CA')}</td>
+          <td><button class="del-btn" onclick="deleteEnrollment(${e.id})">Remove</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function filterTable(query) {
+      const q = query.toLowerCase();
+      renderTable(allEnrollments.filter(e =>
+        `${e.firstName} ${e.lastName} ${e.email}`.toLowerCase().includes(q)
+      ));
+    }
+
+    async function deleteEnrollment(id) {
+      if (!confirm('Remove this enrollment?')) return;
+      await fetch(`/admin/enrollments/${id}`, { method: 'DELETE' });
+      loadEnrollments();
+    }
+
+    // ── Cohorts ───────────────────────────────────────────────────────────────
+    async function loadCohorts() {
+      const res = await fetch('/admin/cohorts');
+      const cohorts = await res.json();
+      const list = document.getElementById('cohortList');
+      if (!cohorts.length) {
+        list.innerHTML = '<p style="color:#9ca3af;font-size:13px;margin-bottom:12px;">No cohort options yet.</p>';
+        return;
+      }
+      list.innerHTML = cohorts.map(c => `
+        <div class="cohort-item">
+          <div class="cohort-info">
+            <span class="cohort-label">${c.label}</span>
+            <span class="cohort-price">${c.price}</span>
+          </div>
+          <div class="cohort-actions">
+            <button class="edit-btn" onclick="openEditModal(${c.id}, '${c.label}', '${c.price}')">Edit</button>
+            <button class="del-btn" onclick="deleteCohort(${c.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function addCohort() {
+      const label = document.getElementById('newLabel').value.trim();
+      const price = document.getElementById('newPrice').value.trim();
+      if (!label || !price) return alert('Both label and price are required.');
+      await fetch('/admin/cohorts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label, price }),
+      });
+      document.getElementById('newLabel').value = '';
+      document.getElementById('newPrice').value = '';
+      loadCohorts();
+    }
+
+    async function deleteCohort(id) {
+      if (!confirm('Delete this cohort option?')) return;
+      await fetch(`/admin/cohorts/${id}`, { method: 'DELETE' });
+      loadCohorts();
+    }
+
+    function openEditModal(id, label, price) {
+      editingCohortId = id;
+      document.getElementById('editLabel').value = label;
+      document.getElementById('editPrice').value = price;
+      document.getElementById('editModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('editModal').classList.remove('open');
+      editingCohortId = null;
+    }
+
+    async function saveCohortEdit() {
+      const label = document.getElementById('editLabel').value.trim();
+      const price = document.getElementById('editPrice').value.trim();
+      await fetch(`/admin/cohorts/${editingCohortId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label, price }),
+      });
+      closeModal();
+      loadCohorts();
+    }
+
+    checkAuth();
+  </script>
+
+</body>
+</html>
