@@ -299,15 +299,8 @@
 
       <div class="form-group">
         <label>Cohort Preference</label>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="cohort" value="Early Bird" required />
-            Early Bird — $499
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="cohort" value="Regular" />
-            Regular — $699
-          </label>
+        <div class="radio-group" id="cohortOptions">
+          <span style="font-size:13px;color:#9ca3af;">Loading options…</span>
         </div>
       </div>
 
@@ -337,6 +330,29 @@
     const form = document.getElementById('signupForm');
     const btn = document.getElementById('submitBtn');
     const msg = document.getElementById('statusMessage');
+
+    async function loadCohorts() {
+      try {
+        const res = await fetch('/cohorts');
+        const cohorts = await res.json();
+        const container = document.getElementById('cohortOptions');
+        if (!cohorts.length) {
+          container.innerHTML = '<span style="font-size:13px;color:#9ca3af;">No options available.</span>';
+          return;
+        }
+        container.innerHTML = cohorts.map((c, i) => `
+          <label class="radio-option">
+            <input type="radio" name="cohort" value="${c.label}" ${i === 0 ? 'required' : ''} />
+            ${c.label} — ${c.price}
+          </label>
+        `).join('');
+      } catch {
+        document.getElementById('cohortOptions').innerHTML =
+          '<span style="font-size:13px;color:#9ca3af;">Could not load options.</span>';
+      }
+    }
+
+    loadCohorts();
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
