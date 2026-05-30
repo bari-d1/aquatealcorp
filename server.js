@@ -138,22 +138,25 @@ app.post('/bootcamp/signup', async (req, res) => {
     });
 
     await resend.emails.send({
-      from: 'Aqua Teal <onboarding@resend.dev>',
+      from: 'Aqua Teal <info@aquatealinc.com>',
       to: email,
-      subject: 'Your Spot is Reserved - Construction Contract Administration Bootcamp',
+      subject: 'Next Step in Your Registration Process',
       html: `
-        <h2>Hi ${first_name},</h2>
-        <p>Thank you for registering for the <strong>Construction Contract Administration Bootcamp</strong>.</p>
-        <p>We have received your enrollment and will be in touch shortly with next steps.</p>
+        <p>Dear ${first_name} ${last_name},</p>
         <br/>
-        <p><strong>Your Details:</strong></p>
-        <p>Name: ${first_name} ${last_name}</p>
-        <p>Email: ${email}</p>
-        ${phone ? `<p>Phone: ${phone}</p>` : ''}
-        ${cohort ? `<p>Cohort: ${cohort}</p>` : ''}
+        <p>We're pleased to inform you that you have successfully completed the first stage of your registration process.</p>
         <br/>
-        <p>See you in the bootcamp!</p>
-        <p>The Aqua Teal Team</p>
+        <p>To proceed to the second stage and finalize your registration, please complete the required payment by sending the specified amount via Interac e-Transfer to the following email address:</p>
+        <br/>
+        <p><strong>olayemikupoluyi@gmail.com</strong></p>
+        <br/>
+        <p>Once the transfer has been completed, kindly reply to this email with confirmation of payment so we can promptly process the next step.</p>
+        <br/>
+        <p>If you have any questions or need assistance, feel free to reach out.</p>
+        <br/>
+        <p>Thank you, and we look forward to seeing you in the Cohort.</p>
+        <br/>
+        <p>Best regards,<br/>Yemi Kupoluyi</p>
       `,
     });
 
