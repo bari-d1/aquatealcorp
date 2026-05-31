@@ -137,6 +137,14 @@ app.post('/bootcamp/signup', async (req, res) => {
       },
     });
 
+    const cohortOption = cohort
+      ? await prisma.cohortOption.findFirst({ where: { label: cohort } })
+      : null;
+    const cohortPrice = cohortOption ? cohortOption.price : null;
+    const paymentLine = cohortPrice
+      ? `please complete the required payment of <strong>${cohortPrice}</strong>`
+      : `please complete the required payment`;
+
     await resend.emails.send({
       from: 'Aqua Teal <info@aquatealinc.com>',
       to: email,
@@ -144,15 +152,15 @@ app.post('/bootcamp/signup', async (req, res) => {
       html: `
         <p>Dear ${first_name} ${last_name},</p>
         <br/>
-        <p>We're pleased to inform you that you have successfully completed the first stage of your registration process.</p>
+        <p>We are pleased to inform you that you have successfully completed the first stage of your registration process.</p>
         <br/>
-        <p>To proceed to the second stage and finalize your registration, please complete the required payment by sending the specified amount via Interac e-Transfer to the following email address:</p>
+        <p>To proceed to the second stage and finalize your registration, ${paymentLine} via Interac e-Transfer to the following email address:</p>
         <br/>
         <p><strong>olayemikupoluyi@gmail.com</strong></p>
         <br/>
-        <p>Once the transfer has been completed, kindly reply to this email with confirmation of payment so we can promptly process the next step.</p>
+        <p>Once the transfer has been completed, kindly send evidence of payment to the interac email so we can promptly process the next step.</p>
         <br/>
-        <p>If you have any questions or need assistance, feel free to reach out.</p>
+        <p>If you have any questions or need assistance, feel free to reach out via the same email.</p>
         <br/>
         <p>Thank you, and we look forward to seeing you in the Cohort.</p>
         <br/>
